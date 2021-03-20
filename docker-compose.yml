@@ -10,4 +10,6 @@ services:
       - LANG=zh_TW.UTF-8
       - DLSITE_ID=${DLSITE_ID}
       - DLSITE_PW=${DLSITE_PW}
+      - DMM_ID=${DMM_ID}
+      - DMM_PW=${DMM_PW}
     restart: unless-stopped

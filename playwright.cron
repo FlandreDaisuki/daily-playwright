@@ -7,3 +7,4 @@
 #  *  *  *  *  *  command
 
   22  2  *  *  *  node /root/DLSite.mjs 2>&1 >> /root/cron.log
+  44  4  *  *  *  node /root/DMM.mjs 2>&1 >> /root/cron.log

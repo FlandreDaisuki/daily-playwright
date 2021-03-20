@@ -3,12 +3,11 @@ import { chromium } from 'playwright';
 
 dotenv.config();
 
+const { DLSITE_ID, DLSITE_PW } = process.env
+
 const browser = await chromium.launch();
 const context = await browser.newContext();
-
 const page = await context.newPage();
-
-const { DLSITE_ID, DLSITE_PW } = process.env
 
 await page.goto('https://login.dlsite.com/login');
 await page.fill('#form_id', DLSITE_ID)
