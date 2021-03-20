@@ -1,0 +1,13 @@
+version: "3.2"
+
+services:
+  daily-playwright:
+    build: .
+    image: flandre/daily-playwright
+    container_name: daily-playwright
+    environment:
+      - TZ=Asia/Taipei
+      - LANG=zh_TW.UTF-8
+      - DLSITE_ID=${DLSITE_ID}
+      - DLSITE_PW=${DLSITE_PW}
+    restart: unless-stopped

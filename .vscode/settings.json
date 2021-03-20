@@ -1,0 +1,12 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "cSpell.words": [
+        "adultchecked",
+        "asmr",
+        "dlsite",
+        "doujin",
+        "hant"
+    ]
+}
