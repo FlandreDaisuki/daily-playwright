@@ -1,9 +1,12 @@
 import * as dotenv from 'dotenv';
 import { chromium } from 'playwright';
+import { log } from './utils.mjs';
 
 dotenv.config();
 
 const { DMM_ID, DMM_PW } = process.env;
+
+log('<script>');
 
 const browser = await chromium.launch();
 const context = await browser.newContext();
@@ -29,6 +32,7 @@ await page.fill('#password', DMM_PW);
 await page.click('input[type="submit"]');
 try {
   await page.waitForNavigation();
+  log('Logged in!');
 } catch {}
 
 await page.goto('https://mission.games.dmm.co.jp/')
@@ -45,20 +49,25 @@ const missionLinks = [...new Set([
 
 const SECONDS = 1000;
 
-await Promise.all(missionLinks.map(async(link) => {
+await Promise.all(missionLinks.map(async(link, idx) => {
   try {
+    log(`open link[${idx}]: ${link}`);
     const p = await context.newPage();
     await p.goto(link);
     await p.waitForTimeout(15 * SECONDS);
     await p.close();
+    log(`close link[${idx}]`);
   } catch {}
 }))
 
 await page.reload();
 try {
-  await page.click('button.receiveAll_btn', {timeout: 15 * SECONDS});
+  await page.click('button.receiveAll_btn', { timeout: 15 * SECONDS });
   await page.waitForTimeout(15 * SECONDS);
+  const missionStatusEls = await page.$$('.standardTab_section.is-receive .p-sectMission:first-child .missionFrame_status');
+  log('1st mission:', await missionStatusEls[0].textContent());
+  log('4th mission:', await missionStatusEls[3].textContent());
 } catch {}
 
 await browser.close();
-
+log('</script>');

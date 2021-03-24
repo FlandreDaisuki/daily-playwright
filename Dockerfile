@@ -8,12 +8,8 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y \
   && apt install -y nodejs \
   && rm -rf /var/lib/apt/lists/*
 
-COPY scripts/* playwright.cron package.json ./
+COPY scripts/* playwright.cron package.json run.sh ./
 
-RUN mv playwright.cron /etc/cron.d/playwright.cron \
-  && chmod +x /etc/cron.d/playwright.cron \
-  && crontab /etc/cron.d/playwright.cron \
-  && touch /root/cron.log \
-  && npm install
+RUN chmod +x run.sh
 
-CMD cron && tail -f /root/cron.log
+CMD /root/run.sh && cron && tail -f /root/cron.log
