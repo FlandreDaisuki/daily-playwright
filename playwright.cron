@@ -6,5 +6,5 @@
 #  |  |  |  |  |
 #  *  *  *  *  *  command
 
-  22  2  *  *  *  DEBUG=pw:browser* node /root/DLSite.mjs 2>&1 >> /root/cron.log
-  33  3  *  *  *  DEBUG=pw:browser* node /root/DMM.mjs    2>&1 >> /root/cron.log
+  22  2  *  *  *  node /root/DLSite.mjs 2>&1 >> /root/DLSite.mjs.log
+  33  3  *  *  *  node /root/DMM.mjs    2>&1 >> /root/DMM.mjs.log

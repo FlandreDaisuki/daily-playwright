@@ -1,12 +1,16 @@
 {
   "name": "daily-playwright",
   "version": "1.0.0",
-  "description": "",
+  "description": "Use playwright for daily routines",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "FlandreDaisuki",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FlandreDaisuki/daily-playwright.git"
+  },
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.2.0",

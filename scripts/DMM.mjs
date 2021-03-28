@@ -50,14 +50,17 @@ const missionLinks = [...new Set([
 const SECONDS = 1000;
 
 await Promise.all(missionLinks.map(async(link, idx) => {
+  const p = await context.newPage();
   try {
     log(`open link[${idx}]: ${link}`);
-    const p = await context.newPage();
     await p.goto(link);
-    await p.waitForTimeout(15 * SECONDS);
+    await p.waitForResponse('https://api-mission.games.dmm.com/games_play/v1');
+  } catch {
+    //
+  } finally {
     await p.close();
     log(`close link[${idx}]`);
-  } catch {}
+  }
 }))
 
 await page.reload();
