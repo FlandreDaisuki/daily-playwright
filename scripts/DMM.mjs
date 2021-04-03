@@ -49,17 +49,34 @@ const missionLinks = [...new Set([
 
 const SECONDS = 1000;
 
-await Promise.all(missionLinks.map(async(link, idx) => {
+const missionResults = await Promise.all(missionLinks.map(async(link, idx) => {
   const p = await context.newPage();
+  const returns = { link };
   try {
     log(`open link[${idx}]: ${link}`);
+    const listener = async(req) => {
+      if(req.url() === 'https://api-mission.games.dmm.com/games_play/v1') {
+        p.off('request', listener);
+
+        returns.request = {
+          headers: req.headers(),
+          body: JSON.stringify(req.postDataJSON()),
+        };
+        const resp = await req.response();
+        returns.response = {
+          status: resp.status(),
+          body: (await resp.body()).toString(),
+        };
+      }
+    };
+    p.on('request', listener)
+
     await p.goto(link);
-    await p.waitForResponse('https://api-mission.games.dmm.com/games_play/v1');
   } catch {
-    //
+    log(`link[${idx}]: Timeout`);
   } finally {
     await p.close();
-    log(`close link[${idx}]`);
+    log(`link[${idx}]`, returns);
   }
 }))
 
@@ -67,9 +84,29 @@ await page.reload();
 try {
   await page.click('button.receiveAll_btn', { timeout: 15 * SECONDS });
   await page.waitForTimeout(15 * SECONDS);
-  const missionStatusEls = await page.$$('.standardTab_section.is-receive .p-sectMission:first-child .missionFrame_status');
-  log('1st mission:', await missionStatusEls[0].textContent());
-  log('4th mission:', await missionStatusEls[3].textContent());
+  const dailyMissionStatusEls = await page.$$('.standardTab_section.is-receive .p-sectMission:first-child .missionFrame_status');
+  log('1st daily:', await dailyMissionStatusEls[0].textContent());
+  log('4th daily:', await dailyMissionStatusEls[3].textContent());
+
+  await page.click('[data-actionlabel="mission_right_tab"]');
+  const lotteryMissionStatusEls =  await page.$$('.listMission_targetText');
+  const toLotteryLog = (t) => {
+    const msg = t.split('\n').map(s=>s.trim()).filter(Boolean);
+    const name = msg.pop();
+    return { name, msg };
+  }
+  const monthlyMissionStatusEls = lotteryMissionStatusEls.slice(0, 2);
+  const weeklyMissionStatusEls = lotteryMissionStatusEls.slice(2);
+  for (const el of weeklyMissionStatusEls) {
+    const t = await el.textContent();
+    const { name, msg } = toLotteryLog(t);
+    log(`weekly [${name}]:`, ...msg);
+  }
+  for (const el of monthlyMissionStatusEls) {
+    const t = await el.textContent();
+    const { name, msg } = toLotteryLog(t);
+    log(`monthly [${name}]:`, ...msg);
+  }
 } catch {}
 
 await browser.close();
