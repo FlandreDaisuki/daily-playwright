@@ -6,5 +6,5 @@
 #  |  |  |  |  |
 #  *  *  *  *  *  command
 
-  22  2  *  *  *  node /root/DLSite.mjs 2>&1 >> /root/DLSite.mjs.log
-  33  3  *  *  *  node /root/DMM.mjs    2>&1 >> /root/DMM.mjs.log
+  22  2  *  *  *  node /root/DLSite.mjs 2>&1 | tee -a /root/DLSite.mjs.log
+  33  3  *  *  *  node /root/DMM.mjs    2>&1 | tee -a /root/DMM.mjs.log
