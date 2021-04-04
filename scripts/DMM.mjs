@@ -40,16 +40,17 @@ await page.goto('https://mission.games.dmm.co.jp/')
 const missionLinkEls = await page.$$('a.listMission_targetLink');
 const missionLinks = [...new Set([
   'http://personal.games.dmm.co.jp/en/my-games/',
-  'http://pc-play.games.dmm.co.jp/play/aigis/',
   'https://games.dmm.co.jp/detail/flower-x/',
   'https://games.dmm.co.jp/detail/otogi_f_r/',
+  'http://pc-play.games.dmm.co.jp/play/aigis/',
   'https://pc-play.games.dmm.co.jp/play/kamipror/',
+  'http://pc-play.games.dmm.co.jp/play/necro_suicide_mission_r/',
   ...await Promise.all(missionLinkEls.map((a) => a.getAttribute('href'))),
 ])];
 
 const SECONDS = 1000;
 
-const missionResults = await Promise.all(missionLinks.map(async(link, idx) => {
+await Promise.all(missionLinks.map(async(link, idx) => {
   const p = await context.newPage();
   const returns = { link };
   try {
