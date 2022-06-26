@@ -17,13 +17,13 @@ await context.addCookies([{
   value:'1',
   domain: '.dmm.co.jp',
   path: '/',
-  expires: new Date('2099-12-31').getTime(),
+  expires: -1,
 }, {
   name: 'top_disclaimer',
   value:'1',
   domain: '.dmm.co.jp',
   path: '/',
-  expires: new Date('2099-12-31').getTime(),
+  expires: -1,
 }]);
 
 await page.goto('https://accounts.dmm.co.jp/service/login/password');
@@ -39,18 +39,23 @@ await page.goto('https://mission.games.dmm.co.jp/')
 
 const missionLinkEls = await page.$$('a.listMission_targetLink');
 const missionLinks = [...new Set([
-  'http://personal.games.dmm.co.jp/en/my-games/',
-  'https://games.dmm.co.jp/detail/flower-x/',
-  'https://games.dmm.co.jp/detail/otogi_f_r/',
-  'http://pc-play.games.dmm.co.jp/play/aigis/',
+  'https://library.games.dmm.co.jp',
+  'https://pc-play.games.dmm.co.jp/play/aigis/',
+  'https://pc-play.games.dmm.co.jp/play/imys_r/',
+  'https://pc-play.games.dmm.co.jp/play/senpri/',
+  'https://pc-play.games.dmm.co.jp/play/flower-x/',
   'https://pc-play.games.dmm.co.jp/play/kamipror/',
-  'http://pc-play.games.dmm.co.jp/play/necro_suicide_mission_r/',
+  'https://pc-play.games.dmm.co.jp/play/otogi_f_r/',
+  'https://pc-play.games.dmm.co.jp/play/monmusutdx/',
+  'https://pc-play.games.dmm.co.jp/play/edensgrenzex/',
+  'https://pc-play.games.dmm.co.jp/play/necro_suicide_mission_r/',
   ...await Promise.all(missionLinkEls.map((a) => a.getAttribute('href'))),
 ])];
 
 const SECONDS = 1000;
 
-await Promise.all(missionLinks.map(async(link, idx) => {
+for await (const link of missionLinks) {
+  const idx = missionLinks.indexOf(link)
   const p = await context.newPage();
   const returns = { link };
   try {
@@ -79,7 +84,7 @@ await Promise.all(missionLinks.map(async(link, idx) => {
     await p.close();
     log(`link[${idx}]`, returns);
   }
-}))
+}
 
 await page.reload();
 try {
